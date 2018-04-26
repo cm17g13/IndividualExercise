@@ -68,7 +68,7 @@ public class AccountManagerDBTest {
 	@Test
 	public void updateAccountTest() {
 		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(person1Account);
-        Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount(person1));
+        Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount(person1Account));
 
 	}
 

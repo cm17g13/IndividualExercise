@@ -52,16 +52,15 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	
 
 	@Transactional(REQUIRED)
-	public String updateAccount(String account) {
-		
-		Account existingAccount = jsonConverter.getObjectForJSON(account, Account.class);
-		if (findAccount(existingAccount.getId()) != null) {
-			manager.merge(existingAccount);
-			return "{\"message\": \"the account has been updated\"}";
-		} else {
-			return "{\"message\": \"the account did not exist, and so was not updated\"}";
+	public String updateAccount(Account account) {
+
+		if(account != null) {
+			manager.merge(account);
+			return "{\"message\": \"the account has been updated\"}"; 
 		}
-	}
+		return "{\"message\": \"account doesn't exist, could not updated\"}";
+		
+}
 	
 	
 	@Transactional(REQUIRED)
@@ -88,6 +87,10 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	@Transactional(REQUIRED)
 	public void setJsonConverter(JSONUtil jsonConverter) {
 		this.jsonConverter = jsonConverter;
+	}
+	
+	public JSONUtil getConverter() {
+		return this.jsonConverter;
 	}
 
 }

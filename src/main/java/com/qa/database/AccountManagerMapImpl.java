@@ -40,14 +40,14 @@ public class AccountManagerMapImpl implements AccountManagerInterface {
         }
     }
 
-    public String updateAccount(String account) {
-        Account existingAccount = jsonConverter.getObjectForJSON(account, Account.class);
-        if (findAnAccount(existingAccount.getId()) != null) {
-            accounts.put(existingAccount.getId() ,existingAccount);
-            return "{\"message\": \"the account has been updated\"}";
-        } else {
-            return "{\"message\": \"the account did not exist, and so was not updated\"}";
-        }
+    public String updateAccount(Account account) {
+    	
+    	if(account != null) {
+			accounts.put(account.getId(), account);
+			return "{\"message\": \"the account has been updated\"}"; 
+		}
+		return "{\"message\": \"account doesn't exist, could not updated\"}";
+    	
     }
 
 
@@ -60,6 +60,10 @@ public class AccountManagerMapImpl implements AccountManagerInterface {
         } else {
             return "{\"message\": \"the account did not exist, and so was not deleted\"}";
         }
+    }
+    
+    public Account findAccount(Long id) {
+    	return accounts.get(id);
     }
     
     public String insertID(String accountString) {
@@ -75,4 +79,8 @@ public class AccountManagerMapImpl implements AccountManagerInterface {
     public Long getCount() {
     	return count;
     }
+    
+    public JSONUtil getConverter() {
+		return this.jsonConverter;
+	}
 }
