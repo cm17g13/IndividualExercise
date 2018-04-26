@@ -1,23 +1,16 @@
 package com.qa.service;
 
-import com.qa.persistence.domain.Account;
-
-import javax.transaction.Transactional;
-
-import static javax.transaction.Transactional.TxType.REQUIRED;
-
 public abstract interface AccountManagerInterface {
 
     String getAllAccounts();
 
-    String findAnAccount(String accountNumber);
+    String findAnAccount(Long id);
 
-    @Transactional(REQUIRED)
     String createAccount(String account);
 
-    @Transactional(REQUIRED)
     String updateAccount(String account);
+    
+    String deleteAccount(Long id);
 
-    @Transactional(REQUIRED)
-    String deleteAccount(String accountNumber);
+    
 }
