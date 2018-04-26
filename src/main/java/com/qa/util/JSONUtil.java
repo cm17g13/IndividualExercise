@@ -11,6 +11,9 @@ public class JSONUtil {
 	}
 
 	public String getJSONForObject(Object obj) {
+		if(obj == null) {
+			return null;
+		}
 		return gson.toJson(obj);
 	}
 
