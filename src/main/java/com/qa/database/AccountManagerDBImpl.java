@@ -29,7 +29,6 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	public String findAnAccount(Long id) {
 
 		Account account = findAccount(id);
-		System.out.println("Thing " +account);
 		if(account != null) {
 			return jsonConverter.getJSONForObject(account);
 		} 
