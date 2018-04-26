@@ -51,7 +51,7 @@ public class AccountManagerMapTest {
     @Test
     public void updateAccountTest() {
     	accountManager.createAccount(person1);
-    	String person2 =  "{\"id\":" + accountManager.getCount() + "," + person1.substring(1);
+    	Account person2 =  jsonConverter.getObjectForJSON("{\"id\":" + accountManager.getCount() + "," + person1.substring(1), Account.class);
         Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount(person2));
 
     }
