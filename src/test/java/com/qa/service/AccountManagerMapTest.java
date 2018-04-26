@@ -29,7 +29,6 @@ public class AccountManagerMapTest {
 
     @Test
     public void getAllAccountsTest() {
-    	String person1 = "{\"firstName\":\"Tib\",\"secondName\":\"Coder\",\"accountNumber\":\"1111\"}";
     	accountManager.createAccount(person1);
         String personArray = "[" + "{\"id\":" + accountManager.getCount() + "," + person1.substring(1) + "]";
         Assert.assertEquals(personArray, accountManager.getAllAccounts());
@@ -38,7 +37,6 @@ public class AccountManagerMapTest {
 
     @Test
     public void findAnAccountTest() {
-    	String person1 = "{\"firstName\":\"Tib\",\"secondName\":\"Coder\",\"accountNumber\":\"1111\"}";
     	accountManager.createAccount(person1);
     	String person2 =  "{\"id\":" + accountManager.getCount() + "," + person1.substring(1);
         Assert.assertEquals(person2, accountManager.findAnAccount(accountManager.getCount()));
@@ -51,7 +49,6 @@ public class AccountManagerMapTest {
 
     @Test
     public void updateAccountTest() {
-    	String person1 = "{\"firstName\":\"Tib\",\"secondName\":\"Coder\",\"accountNumber\":\"1111\"}";
     	accountManager.createAccount(person1);
     	String person2 =  "{\"id\":" + accountManager.getCount() + "," + person1.substring(1);
         Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount(person2));
@@ -60,7 +57,6 @@ public class AccountManagerMapTest {
 
     @Test
     public void deleteAccountTest() {
-    	String person1 = "{\"firstName\":\"Tib\",\"secondName\":\"Coder\",\"accountNumber\":\"1111\"}";
     	accountManager.createAccount(person1);
         Assert.assertEquals("{\"message\": \"the account has been deleted\"}", accountManager.deleteAccount(accountManager.getCount()));
 
