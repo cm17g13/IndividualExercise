@@ -1,6 +1,6 @@
 package com.qa.service;
 
-import com.qa.domain.Account;
+import com.qa.persistence.domain.Account;
 import com.qa.util.JSONUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class AccountManagerDBTest {
 	
 	@InjectMocks
-	private AccountManagerDBRepo accountManager;
+	private AccountManagerDBImpl accountManager;
 
     private JSONUtil jsonConverter;
 	
@@ -28,6 +28,8 @@ public class AccountManagerDBTest {
 
 	@Mock
     private TypedQuery<Account> query;
+	
+	private Account person1Account = new Account("Callum", "McGregor", "1234");
 
 	String person1 = "{\"firstName\":\"Callum\",\"secondName\":\"McGregor\",\"accountNumber\":\"1234\"}";
 	
@@ -41,7 +43,10 @@ public class AccountManagerDBTest {
 
 	@Test
 	public void getAllAccountsTest() {
-     
+        Mockito.when(manager.createQuery(Mockito.anyString(), Mockito.eq(Account.class))).thenReturn(query);
+        ArrayList<Account> accounts = new ArrayList<Account>();
+        accounts.add(new Account("Callum", "McGregor", "1234"));
+        Mockito.when(query.getResultList()).thenReturn(accounts);
         String personArray = "[" + person1 + "]";
         Assert.assertEquals(personArray, accountManager.getAllAccounts());
 	}
@@ -49,27 +54,28 @@ public class AccountManagerDBTest {
 
 	@Test
 	public void findAnAccountTest() {
-        
-        Assert.assertEquals(person1, accountManager.findAnAccount("1234"));
+        Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(person1Account);
+        Assert.assertEquals(person1, accountManager.findAnAccount(1L));
 	}
 
 	@Test
 	public void createAccountTest() {
-		accountManager.deleteAccount("1234");
+		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(null);
         Assert.assertEquals("{\"message\": \"the account has been added\"}", accountManager.createAccount(person1));
     }
 
 	@Test
 	public void updateAccountTest() {
-  
-        Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount("1234" ,person1));
+		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(person1Account);
+        Assert.assertEquals("{\"message\": \"the account has been updated\"}", accountManager.updateAccount(person1));
 
 	}
 
 	@Test
 	public void deleteAccountTest() {
-       
-        Assert.assertEquals("{\"message\": \"the account has been deleted\"}", accountManager.deleteAccount("1234"));
+		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(person1Account);
+        Mockito.when(query.getSingleResult()).thenReturn(new Account("Callum", "McGregor", "1234"));
+        Assert.assertEquals("{\"message\": \"the account has been deleted\"}", accountManager.deleteAccount(1L));
 
     }
 }
