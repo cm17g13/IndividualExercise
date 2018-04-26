@@ -1,5 +1,6 @@
 package com.qa.service;
 
+import com.qa.database.AccountManagerDBImpl;
 import com.qa.persistence.domain.Account;
 import com.qa.util.JSONUtil;
 import org.junit.Assert;

@@ -1,4 +1,4 @@
-package com.qa.service;
+package com.qa.database;
 
 import com.qa.persistence.domain.Account;
 import com.qa.util.JSONUtil;

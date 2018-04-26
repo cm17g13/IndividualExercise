@@ -1,4 +1,4 @@
-package com.qa.service;
+package com.qa.database;
 
 import javax.inject.Inject;
 import javax.persistence.*;
