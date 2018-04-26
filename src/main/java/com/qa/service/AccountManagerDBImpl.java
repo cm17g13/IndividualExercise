@@ -26,21 +26,23 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	}
 	
 
-	public String findAnAccount(String accountNumber) {
+	public String findAnAccount(Long id) {
 
-		TypedQuery<Account> query = manager.createQuery("SELECT a FROM ACCOUNTS a WHERE a.accountNumber = :accountNumber", Account.class);
-		Account anAccount = query.getSingleResult();
-		return   jsonConverter.getJSONForObject(anAccount);
-		//return manager.find(Account.class, accountNumber); how you'd do it if you want to use find in the EntityManager
+		Account account = findAccount(id);
+		System.out.println("Thing " +account);
+		if(account != null) {
+			return jsonConverter.getJSONForObject(account);
+		} 
+		return "{\"message\": \"account was not found\"}";
+	
 	}
 	
 	
 	@Transactional(REQUIRED)
 	public String createAccount(String account) {
-		System.out.println();
 		
 		Account newAccount = jsonConverter.getObjectForJSON(account, Account.class);
-		if(!findAnAccount(newAccount.getAccountNumber()).equals("null")) {
+		if(findAccount(newAccount.getId()) != null) {
 			return "{\"message\": \"the account exists, and so was not added\"}";
 		} else {
 			manager.persist(newAccount);
@@ -53,7 +55,7 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	public String updateAccount(String account) {
 		
 		Account existingAccount = jsonConverter.getObjectForJSON(account, Account.class);
-		if (!findAnAccount(existingAccount.getAccountNumber()).equals("null")) {
+		if (findAccount(existingAccount.getId()) != null) {
 			manager.merge(existingAccount);
 			return "{\"message\": \"the account has been updated\"}";
 		} else {
@@ -63,15 +65,19 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	
 	
 	@Transactional(REQUIRED)
-	public String deleteAccount(String accountNumber) {
+	public String deleteAccount(Long id) {
 		
-		String exists = findAnAccount(accountNumber);
-		if (!exists.equals("null")) {
+		Account exists = findAccount(id);
+		if (exists != null) {
 			manager.remove(exists);
 			return "{\"message\": \"the account has been deleted\"}";
 		} else {
 			return "{\"message\": \"the account did not exist, and so was not deleted\"}";
 		}	
+	}
+	
+	public Account findAccount(Long id) {
+		return manager.find(Account.class, id);
 	}
 	
 	@Transactional(REQUIRED)
@@ -83,5 +89,6 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	public void setJsonConverter(JSONUtil jsonConverter) {
 		this.jsonConverter = jsonConverter;
 	}
+
 }
 
