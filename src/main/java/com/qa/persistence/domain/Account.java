@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity 
-@Table(name="Accounts")
 public class Account {
 	
 	@Id
