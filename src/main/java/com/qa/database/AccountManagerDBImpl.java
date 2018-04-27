@@ -20,7 +20,7 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	
 	public String getAllAccounts() {
 		
-		TypedQuery<Account> query = manager.createQuery("SELECT a FROM ACCOUNTS a", Account.class);
+		TypedQuery<Account> query = manager.createQuery("SELECT a FROM Account a", Account.class);
 		Collection<Account> accounts = query.getResultList();
 		return jsonConverter.getJSONForObject(accounts);
 	}
@@ -41,12 +41,9 @@ public class AccountManagerDBImpl implements AccountManagerInterface {
 	public String createAccount(String account) {
 		
 		Account newAccount = jsonConverter.getObjectForJSON(account, Account.class);
-		if(findAccount(newAccount.getId()) != null) {
-			return "{\"message\": \"the account exists, and so was not added\"}";
-		} else {
-			manager.persist(newAccount);
-			return "{\"message\": \"the account has been added\"}";
-		}
+		manager.persist(newAccount);
+		return "{\"message\": \"the account has been added\"}";
+		
 	}
 	
 
