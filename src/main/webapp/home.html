@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Individual-Exercise</title>
+</head>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<body>
+
+<div ng-app="application" ng-controller="control" ng-init="refresh()" class="mainContent">
+    <div>
+        <p>Response Headers: {{headers}}</p>
+        <p>Output Message : {{msg}}</p>
+        <p>StatusCode: {{statusval}}</p>
+        <p>Status: {{statustext}}</p>
+
+    </div>
+    <p>Table of Accounts</p>
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Second Name</th>
+            <th>Account Number</th>
+        </tr>
+        <tr ng-repeat="a in accounts">
+            <th>{{a.firstName}}</th>
+            <th>{{a.secondName}}</th>
+            <th>{{a.accountNumber}}</th>
+            <th><a href="edit.html" target="_blank"><input type="button" value="Edit" ng-click="pass(a.id,a.firstName,a.secondName,a.accountNumber)"/></a></th>
+            <th><input type="button" value="Delete" ng-click="deleteAccount(a.id)"/></th>
+        </tr>
+    </table>
+
+    <p>Input data to add an account</p>
+    <div>
+        First Name :     <input ng-model="firstName" /><br/><br/>
+        Second Name  :   <input ng-model="secondName" /><br/><br/>
+        Account Number : <input ng-model="accountNumber" /><br/><br/>
+        <input type="button" value="Create" ng-click="createAccount(firstName, secondName, accountNumber)" /> <br/><br/>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('application', []);
+    app.controller('control', function($scope, $http) {
+
+        $scope.firstName = null;
+        $scope.secondName = null;
+        $scope.accountNumber = null;
+        $scope.id = null;
+        $scope.updatefName=null;
+        $scope.updatesName=null;
+        $scope.updateAccountNum=null;
+        $scope.lblMsg = null;
+        $scope.pass= function ( pass_id,pass_fName,pass_sName,pass_accNumber)
+        {
+
+            window.localStorage.setItem("store_id",pass_id);
+            window.localStorage.setItem("store_fN",pass_fName);
+            window.localStorage.setItem("store_sN",pass_sName);
+            window.localStorage.setItem("store_aN",pass_accNumber);
+
+        }
+        $scope.createAccount = function (firstName, secondName, accountNumber) {
+            var data = {
+                firstName: firstName,
+                secondName: secondName,
+                accountNumber: accountNumber
+            };
+            $http.post('http://localhost:8080/Individual-Exercise/rest/account/json', JSON.stringify(data)).then(function (response) {
+                if (response.data)
+                    $scope.msg = "Data Submitted Successfully!";
+            }, function (response) {
+                $scope.msg = "Service unresponsive";
+                $scope.statusval = response.status;
+                $scope.statustext = response.statusText;
+                $scope.headers = response.headers();
+            });
+        };
+        $scope.deleteAccount = function (id_del) {
+            var url = "http://localhost:8080/Individual-Exercise/rest/account/json/" + id_del.toString();
+            $http.delete(url).then(function (response) {
+                if (response.data)
+                    $scope.msg = "Data Submitted Successfully!";
+                $scope.refresh();
+            }, function (response) {
+                $scope.msg = "Service unresponsive";
+                $scope.statusval = response.status;
+                $scope.statustext = response.statusText;
+                $scope.headers = response.headers();
+            });
+        };
+        $scope.refresh =  function(){
+            $http({
+                method : "GET",
+                url : "http://localhost:8080/Individual-Exercise/rest/account/json"
+            }).then(function mySuccess(response) {
+                $scope.accounts = response.data;
+            }, function myError(response) {
+                $scope.accounts = response.statusText;
+            });
+        };
+    });
+
+</script>
+
+</body>
+</html>

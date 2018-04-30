@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Individual-Exercise</title>
+</head>
+<!--<script
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"
+type="text/javascript"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<div ng-app="application" ng-controller="control">
+
+    <p>Output Message : {{msg}}</p>
+    <p>StatusCode: {{statusval}}</p>
+    <p>Status: {{statustext}}</p>
+    <p>Response Headers: {{headers}}</p>
+    <div>
+        <p>The existing account: </p>
+        <div>
+            <div style="display: inline">
+                <p id="existingfName"><b></b></p>
+            </div>
+            <div style="display: inline">
+                <p id="existingsName"><b></b></p>
+            </div>
+            <div style="display: inline">
+               <p id="existingAccountNumber"><b></b></p>
+            </div>
+        </div>
+    </div>
+    <p>=========================================</p>
+    <div>
+        <p>Please enter information to update</p>
+        First Name : <input ng-model="updatefName" id="placeH1" placeholder=""/><br/><br/>
+        Second Name  : <input ng-model="updatesName" id="placeH2" placeholder=""/><br/><br/>
+        Account Number : <input ng-model="updateAccountNum" id="placeH3" placeholder=""/><br/><br/>
+        <input type="button" value="Update" ng-click="updateAccount(updatefName, updatesName, updateAccountNum)" /> <br/><br/>
+    </div>
+    <script>
+        var app = angular.module('application', []);
+        app.controller('control', function($scope, $http) {
+            document.getElementById("existingfName").innerText = "First Name :     " + localStorage.getItem("store_fN");
+            document.getElementById("existingsName").innerText = "Second Name  :   " + localStorage.getItem("store_sN");
+            document.getElementById("existingAccountNumber").innerText = "Account Number : " + localStorage.getItem("store_aN");
+            $scope.firstName = null;
+            $scope.secondName = null;
+            $scope.accountNumber = null;
+            $scope.id = null;
+            $scope.updatefName="";
+            $scope.updatesName="";
+            $scope.updateAccountNum="";
+            $scope.lblMsg = null;
+            $scope.updateAccount = function ( updatefName, updatesName,
+                                           updateAccountNum) {
+                var data = {
+                    id: localStorage.getItem("store_id"),
+                    firstName : updatefName,
+                    secondName : updatesName,
+                    accountNumber : updateAccountNum
+                };
+                
+                $http.put('http://localhost:8080/Individual-Exercise/rest/account/json',
+                    JSON.stringify(data)).then(function (response) {
+                    if (response.data)
+                        $scope.msg = "Data Submitted Successfully!";
+                }, function (response) {
+                    $scope.msg = "Service unresponsive";
+                    $scope.statusval = response.status;
+                    $scope.statustext = response.statusText;
+                    $scope.headers = response.headers();
+                });
+            };
+        });
+
+    </script>
+
+</body>
+</html>
